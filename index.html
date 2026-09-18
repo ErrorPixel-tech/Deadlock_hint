@@ -205,7 +205,7 @@
             antiheal: { name: 'Anti-heal', icon: 'icons/healbane.webp' },
             strong_antiheal: 'Strong Anti-heal',
             // MORE ANTI HEAL
-            healbane: 'Healbane',
+            healbane: { name: 'Healbane', icon: 'icons/healbane.webp' },
             toxic_bullets: 'Toxic Bullets',
             spirit_burn: 'Spirit Burn',
             decay: 'Decay',
@@ -222,7 +222,7 @@
             // ANTI CC
             indomitable: { name: 'Indomitable', icon: 'icons/indomitable.webp' },
             unstoppable: { name: 'Unstoppable', icon: 'icons/unstoppable.webp' },
-            ethereal_shift: 'Ethereal Shift',
+            ethereal_shift: { name: 'Ethereal Shift', icon: 'icons/ethereal_shift.png' },
 
             // ANTI FIGHT HEROES
             rebuttal: { name: 'Rebuttal', icon: 'icons/rebuttal.webp' },
@@ -232,6 +232,7 @@
             spirit_shielding: 'Spirit Shielding',
             spirit_resilience: { name: 'Spirit Resilience', icon: 'icons/spirit_resilience.webp' },
             silence_wave: { name: 'Silence Wave', icon: 'icons/silence_wave.webp' },
+
 
             // ANTI EFFECTS HEROES
             dispel_magic: { name: 'Dispel Magic', icon: 'icons/dispel_magic.webp' },
@@ -308,7 +309,7 @@
             curse: ['kelvin', 'dynamo', 'the_doorman', 'viscous'],
 
             // ANTI HEAL
-            antiheal: ['abrams', 'apollo', 'bebop', 'victor', 'mo_and_krill', 'lady_geist', 'shiv', 'rem', 'kelvin', 'ivy', 'warden', 'silver', 'seven', 'paige', 'mirage', 'mina', 'mcginnis', 'lash', 'infernus', 'haze', 'graves', 'dynamo', 'celeste', 'calico', 'billy', 'yamato'],
+            healbane: ['abrams', 'apollo', 'bebop', 'victor', 'mo_and_krill', 'lady_geist', 'shiv', 'rem', 'kelvin', 'ivy', 'warden', 'silver', 'seven', 'paige', 'mirage', 'mina', 'mcginnis', 'lash', 'infernus', 'haze', 'graves', 'dynamo', 'celeste', 'calico', 'billy', 'yamato'],
             // strong_antiheal: ['abrams', 'apollo', 'victor', 'mo_and_krill', 'lady_geist', 'shiv', 'rem', 'kelvin', 'ivy', 'silver', 'mirage', 'mina', 'mcginnis', 'haze', 'graves', 'celeste', 'calico', 'billy', 'yamato'],
             // healbane: ['abrams', 'apollo', 'bebop', 'victor', 'mo_and_krill', 'lady_geist', 'shiv', 'rem', 'kelvin', 'ivy', 'warden', 'silver', 'seven', 'bebop', 'paige', 'mirage', 'mina', 'mcginnis', 'lash', 'infernus', 'haze', 'grey_talon', 'graves', 'dynamo', 'celeste', 'calico', 'billy'],
             // toxic_bullets: 'Toxic Bullets',
@@ -322,10 +323,10 @@
             tank_buster: [''],
 
             // ANTI STUN HEROES
-            indomitable: ['abrams', 'apollo', 'bebop', 'billy', 'drifter', 'graves', 'grey_talon', 'haze', 'holiday', 'infernus', 'ivy', 'lady_geist', 'lash', 'mo_and_krill', 'paige', 'paradox', 'rem', 'seven', 'silver', 'sinclair', 'the_doorman', 'venator', 'victor', 'vindicta', 'vyper', 'warden', 'wraith'],
-            unstoppable: ['abrams', 'vindicta', 'bebop', 'lash', 'seven', 'silver', 'wraith', 'haze', 'graves', 'grey_talon', 'celeste', 'warden', 'drifter', 'infernus', 'the_doorman', 'mo_and_krill', 'dynamo', 'apollo', 'billy', 'ivy', 'paige', 'paradox', 'rem', 'sinclair', 'venator', 'victor', 'vyper'],
+            indomitable: ['abrams', 'bebop', 'billy', 'drifter', 'graves', 'grey_talon', 'haze', 'holiday', 'infernus', 'lady_geist', 'lash', 'mo_and_krill', 'paige', 'paradox', 'rem', 'seven', 'silver', 'sinclair', 'the_doorman', 'venator', 'victor', 'vindicta', 'vyper', 'warden', 'wraith'],
+            unstoppable: ['abrams', 'vindicta', 'bebop', 'lash', 'seven', 'silver', 'graves', 'grey_talon', 'celeste', 'warden', 'drifter', 'the_doorman', 'mo_and_krill', 'dynamo', 'billy', 'paige', 'paradox', 'rem', 'sinclair', 'venator', 'victor', 'vyper'],
             counterspell: ['abrams', 'apollo', 'calico', 'bebop', 'billy', 'grey_talon', 'infernus', 'ivy', 'lady_geist', 'lash', 'mo_and_krill', 'paige', 'paradox', 'rem', 'seven', 'sinclair', 'the_doorman', 'venator', 'victor', 'warden'],
-            ethereal_shift: ['kelvin'],
+            ethereal_shift: ['apollo', 'kelvin', 'lash', 'abrams', 'bebop', 'billy', 'calico', 'celeste', 'graves', 'grey_talon', 'haze', 'holiday', 'infernus', 'ivy', 'lady_geist', 'mcginnis', 'mina', 'mirage', 'mo_and_krill', 'paige', 'paradox', 'pocket', 'rem', 'silver', 'sinclair', 'the_doorman', 'venator', 'victor', 'warden', 'wraith', 'yamato'],
 
             // ANTI FIGHT HEROES
             rebuttal: ['abrams', 'calico', 'billy', 'celeste', 'apollo', 'silver', 'victor'],
@@ -333,25 +334,25 @@
             // ANTI SPIRIT HEROES ITEMS
             spellbreaker: ['apollo', 'bebop', 'kelvin', 'calico', 'celeste', 'dynamo', 'holiday', 'lady_geist', 'lash', 'mina', 'mirage', 'paradox', 'shiv', 'sinclair', 'victor', 'viscous', 'yamato', 'wraith', 'paige'],
             spirit_shielding: [],
-            spirit_resilience: ['abrams', 'the_doorman', 'seven', 'pocket', 'kelvin', 'apollo', 'billy', 'calico', 'bebop', 'calico', 'celeste', 'dynamo', 'holiday', 'lady_geist', 'lash', 'mina', 'mirage', 'paradox', 'rem', 'shiv', 'sinclair', 'victor', 'viscous', 'yamato', 'wraith', 'paige'],
-            silence_wave: ['abrams', 'victor', 'apollo', 'billy', 'celeste', 'calico', 'dynamo', 'drifter', 'holiday', 'mina', 'mirage', 'infernus', 'pocket', 'lady_geist', 'lash', 'sinclair', 'the_doorman', 'shiv', 'viscous', 'yamato'],
+            spirit_resilience: ['abrams', 'ivy', 'infernus', 'the_doorman', 'seven', 'pocket', 'kelvin', 'apollo', 'billy', 'calico', 'bebop', 'calico', 'celeste', 'dynamo', 'holiday', 'lady_geist', 'lash', 'mina', 'mirage', 'paradox', 'rem', 'shiv', 'sinclair', 'victor', 'viscous', 'yamato', 'wraith', 'paige'],
+            silence_wave: ['abrams', 'wraith', 'haze', 'ivy', 'rem', 'victor', 'apollo', 'billy', 'celeste', 'calico', 'dynamo', 'drifter', 'holiday', 'mina', 'mirage', 'infernus', 'pocket', 'lady_geist', 'lash', 'sinclair', 'the_doorman', 'shiv', 'viscous', 'yamato'],
 
             // ANTI EFFECTS HEROES
             dispel_magic: ['bebop', 'vindicta', 'graves', 'haze', 'infernus', 'mirage', 'mo_and_krill', 'drifter', 'lady_geist', 'mina', 'paradox', 'seven', 'warden', 'the_doorman', 'shiv', 'vyper'],
             // plated_armor: ['haze', 'infernus', 'mirage', 'mina'],
 
             // ANTI MOVEMENT HEROES 
-            slowing_hex: ['abrams', 'pocket', 'lash', 'mina', 'rem', 'holiday', 'apollo', 'wraith', 'shiv', 'vindicta', 'grey_talon', 'mo_and_krill', 'dynamo', 'celeste', 'calico'],
+            slowing_hex: ['abrams', 'pocket', 'lash', 'mina', 'rem', 'apollo', 'shiv', 'vindicta', 'grey_talon', 'mo_and_krill', 'dynamo', 'celeste', 'calico'],
 
             mystick_slow: [],
 
             // ANTI GUN HEROES
-            // bullet_resilience: ['bebop', 'venator', 'billy', 'drifter', 'grey_talon', 'haze', 'holiday', 'lady_geist', 'mcginnis', 'pocket', 'silver', 'venator', 'victor', 'vindicta', 'vyper', 'warden', 'wraith'],
+            bullet_resilience: ['bebop', 'ivy', 'infernus', 'venator', 'billy', 'drifter', 'grey_talon', 'haze', 'holiday', 'lady_geist', 'mcginnis', 'pocket', 'silver', 'venator', 'victor', 'vindicta', 'vyper', 'warden', 'wraith'],
             rusted_barrel: ['graves', 'vyper', 'silver', 'mirage', 'infernus', 'drifter', 'haze', 'warden', 'wraith'],
             suppressor: [],
             metal_skin: ['haze', 'wraith', 'vyper', 'silver', 'venator'],
             // escalating: ['haze', 'wraith', 'venator', 'victor', 'silver', 'holiday', 'grey_talon', 'vyper'],
-            return_fire: ['haze', 'wraith', 'vyper', 'silver', 'vindicta', 'venator'],
+            return_fire: ['haze', 'wraith', 'vyper', 'infernus', 'ivy', 'silver', 'vindicta', 'venator'],
             // phantom_strike: ['grey_talon', 'vindicta', 'holiday', 'lash'],
             disarming_hex: [],
 
