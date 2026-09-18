@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Контр-предметы</title>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            background: #1a1a1f;
+            color: #eee;
+            padding: 20px;
+        }
+
+        .page-wrapper {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 20px;
+        }
+
+        /* красный */
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            gap: 30px;
+        }
+
+
+        .btn {
+            background: #1a1a1f;
+            border: 2px solid #444;
+            border-radius: 10px;
+            padding: 12px;
+            cursor: pointer;
+            text-align: center;
+            transition: .15s;
+            user-select: none;
+            color: inherit;
+            font-family: inherit;
+            font-size: inherit;
+            font-weight: 500;
+        }
+
+        .btn--reset {}
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: #2a2a33;
+            border: 2px solid #444;
+            border-radius: 10px;
+            padding: 12px;
+            cursor: pointer;
+            text-align: center;
+            transition: .15s;
+            user-select: none;
+        }
+
+        .card:hover {
+            border-color: #666;
+        }
+
+        .card.active {
+            border-color: #4ade80;
+            background: #1e3a2a;
+            box-shadow: 0 0 12px rgba(74, 222, 128, .4);
+        }
+
+        .card .name {
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .card .items {
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        .result {
+            background: #22222a;
+            border-radius: 10px;
+            padding: 16px;
+        }
+
+        .result-row {
+            display: grid;
+            grid-template-columns: 150px auto 1fr;
+            align-items: center;
+            gap: 15px;
+            padding: 6px 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .result__heroes {
+            display: flex;
+            background-color: #1a1a1f;
+            padding: 5px;
+            border-radius: 6px;
+            gap: 5px;
+        }
+
+        .result__hero {}
+
+        .result__count {
+            margin-left: auto;
+        }
+
+        .result-row:last-child {
+            border-bottom: none;
+        }
+
+        .count {
+            color: #bb261c;
+            font-weight: 700;
+        }
+
+
+        .count-1 {
+            color: #4caf50;
+        }
+
+        /* зелёный */
+        .count-2 {
+            color: #8bc34a;
+        }
+
+        .count-3 {
+            color: #ffc107;
+        }
+
+        /* жёлтый */
+        .count-4 {
+            color: #ff9800;
+        }
+
+        .count-5 {
+            color: #ff5722;
+        }
+
+        .count-6 {
+            color: #f44336;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="page-wrapper">
+        <header class="header">
+            <h1>Выбери героев — увидишь, какие предметы их контрят чаще всего</h1>
+            <button id="reset" class="btn btn--reset">Сбросить выбор</button>
+        </header>
+        <div class="grid" id="grid"></div>
+
+        <h2>Контр-предметы (по частоте)</h2>
+        <div class="result" id="result">Выбери хотя бы одного героя</div>
+    </div>
+
+    <script>
+        // === 1. Данные героев ===
+        // const heroes = [
+        //     { id: 'abrams', name: 'Abrams', items: ['Healbane', 'Toxic Bullets', 'Indomitable', 'Rebuttal', 'Spirit Burn', 'Unstoppable', 'Tank Buster', 'Decay', 'Counterspell', 'Ethereal Shift'] },
+        //     { id: 'appolo', name: 'Appolo', items: ['Indomitable', 'Slowing Hex', 'Counterspell', 'Spellbreaker', 'Spirit Resilience', 'Knockdown', 'Silence Wave', 'Mystick Slow'] },
+        //     { id: 'bebop', name: 'Bebop', items: ['Indomitable', 'Dispel Magic', 'Counterspell', 'Divine Barrier', 'Knockdown', 'Spirit Shielding', 'Healbane', 'Ethereal Shift'] },
+        //     { id: 'billy', name: 'Billy', items: ['Indomitable', 'Rebuttal', 'Rusted Barrel', 'Counterspell', 'Superior Stamina', 'Suppressor', 'Plated Armor', 'Metal Skin', 'Ethereal Shift'] },
+        //     { id: 'calico', name: 'Calico', items: ['Indomitable', 'Slowing Hex', 'Capacitor', 'Curse', 'Healbane', 'Ethereal Shift', 'Silence Wave', '', '', '', ''] },
+        //     { id: 'celeste', name: 'Celeste', items: ['Indomitable', 'Knockdown', 'Capacitor', 'Counterspell', 'Spirit Shielding', 'Healbane', 'Unstoppable', '', '', '', ''] },
+        //     { id: 'drifter', name: 'Drifter', items: ['Indomitable', 'Disarming Hex', 'Dispel Magic', 'Metal Skin', 'Weapon Shielding', '', '', '', '', '', ''] },
+        //     { id: 'dynamo', name: 'Dynamo', items: ['Unstoppable', 'Indomitable', 'Knockdown', 'Curse', 'Superior Stamina', 'Spellbreaker'] },
+        //     { id: 'graves', name: 'Graves', items: ['Indomitable', 'Monster Rounds', 'Healbane', 'Alchemical Fire', 'Spirit Shielding', '', '', '', '', '', ''] },
+        //     { id: 'grey_talon', name: 'Grey Talon', items: ['Knockdown', 'Indomitable', '', '', '', '', '', '', '', '', ''] },
+        //     { id: 'haze', name: 'Haze', items: ['Indomitable', 'Metal Skin', 'Knockdown', 'Return Fire', 'Juggernaut', 'Silence Wave', 'Suppressor'] },
+        //     { id: 'holiday', name: 'Holiday', items: ['Indomitable', 'Unstoppable', 'Rescue Beam', 'Knockdown', '', '', '', '', '', '', ''] },
+        //     { id: 'infernus', name: 'Infernus', items: ['Indomitable', 'Dispel Magic', 'Counterspell', 'Knockdown'] },
+        //     { id: 'ivy', name: 'Ivy', items: ['Indomitable', 'Knockdown', 'Extra Stamina', 'Counterspell', '', '', '', '', '', '', ''] },
+        //     { id: 'kelvin', name: '', items: ['', '', '', '', '', '', '', '', '', '', ''] },
+        //     { id: '', name: '', items: ['', '', '', '', '', '', '', '', '', '', ''] },
+        //     { id: '', name: '', items: ['', '', '', '', '', '', '', '', '', '', ''] },
+
+        //     // DANGER ULT ULTS
+        //     { id: 'lash', name: 'Lash', items: ['Indomitable', 'Knockdown', 'Counterspell', 'Spellbreaker', 'Slowing Hex', 'Silence Wave', 'Unstoppable', '', '', ''] },
+
+        //     // 
+        //     { id: '', name: '', items: ['', '', '', '', '', '', '', '', '', '', ''] },
+        // ];
+
+        const ITEMS = {
+            // SAVE TEAMMATES
+            divine_barrier: 'Divine Barrier',
+
+            // ANTI FLIGHT AND ULT
+            knockdown: 'Knockdown',
+            curse: 'Curse',
+
+            // SIMPLE ANTI HEAL
+            antiheal: 'Anti-heal',
+            strong_antiheal: 'Strong Anti-heal',
+            // MORE ANTI HEAL
+            healbane: 'Healbane',
+            toxic_bullets: 'Toxic Bullets',
+            spirit_burn: 'Spirit Burn',
+            decay: 'Decay',
+            crippling: 'Crippling Headshot',
+            inhibitor: 'Inhibitor',
+
+
+            // ANTI RESIST HEROES
+            tank_buster: 'Tank Buster',
+
+            // ANTI STUN HEROES
+            indomitable: 'Indomitable',
+            unstoppable: 'Unstoppable',
+            counterspell: 'Counterspell',
+            ethereal_shift: 'Ethereal Shift',
+
+            // ANTI FIGHT HEROES
+            rebuttal: 'Rebuttal',
+
+            // ANTI SPIRIT HEROES ITEMS
+            spellbreaker: 'Spellbreaker',
+            spirit_shielding: 'Spirit Shielding',
+            spirit_resilience: 'Spirit Resilience',
+            silence_wave: 'Silence Wave',
+
+            // ANTI EFFECTS HEROES
+            dispel_magic: 'Dispel Magic',
+            plated_armor: 'Plated Armor',
+
+            // ANTI MOVEMENT HEROES 
+            slowing_hex: 'Slowing Hex',
+            mystick_slow: 'Mystick Slow',
+
+            // ANTI GUN HEROES
+            bullet_resilience: 'Bullet Resilience',
+            rusted_barrel: 'Rusted Barrel',
+            suppressor: 'Suppressor',
+            metal_skin: 'Metal Skin',
+            escalating: 'Escalating Resilience',
+            return_fire: 'Return Fire',
+            phantom_strike: 'Phantom Strike',
+            disarming_hex: 'Disarming Hex',
+
+            // RUN AWAY
+            superior_stamina: 'Superior Stamina',
+        };
+
+        const HEROES = {
+            abrams: 'Abrams',
+            apollo: 'Apollo',
+            bebop: 'Bebop',
+            billy: 'Billy',
+            calico: 'Calico',
+            celeste: 'Celeste',
+            drifter: 'Drifter',
+            dynamo: 'Dynamo',
+            graves: 'Graves',
+            grey_talon: 'Grey Talon',
+            haze: 'Haze',
+            holiday: 'Holiday',
+            infernus: 'Infernus',
+            ivy: 'Ivy',
+            kelvin: 'Kelvin',
+            lady_geist: 'Lady Geist',
+            lash: 'Lash',
+            mcginnis: 'McGinnis',
+            mina: 'Mina',
+            mirage: 'Mirage',
+            mo_and_krill: 'Mo & Krill',
+            paige: 'Paige',
+            paradox: 'Paradox',
+            pocket: 'Pocket',
+            rem: 'Rem',
+            seven: 'Seven',
+            shiv: 'Shiv',
+            silver: 'Silver',
+            sinclair: 'Sinclair',
+            the_doorman: 'The Doorman',
+            venator: 'Venator',
+            victor: 'Victor',
+            vindicta: 'Vindicta',
+            viscous: 'Viscous',
+            vyper: 'Vyper',
+            warden: 'Warden',
+            wraith: 'Wraith',
+            yamato: 'Yamato',
+        };
+
+        const ITEM_TO_HEROES = {
+            // SAVE TEAMMATES
+            divine_barrier: ['pocket'],
+
+            // ANTI FLIGHT AND ULT
+            knockdown: ['bebop', 'celeste', 'dynamo', 'grey_talon', 'haze', 'holiday', 'infernus', 'ivy', 'kelvin', 'lash', 'mcginnis', 'mina', 'mo_and_krill', 'seven', 'sinclair', 'vindicta'],
+            curse: [],
+
+            // ANTI HEAL
+            antiheal: ['abrams', 'apollo', 'bebop', 'victor', 'mo_and_krill', 'lady_geist', 'shiv', 'rem', 'kelvin', 'ivy', 'warden', 'silver', 'seven', 'bebop', 'paige', 'mirage', 'mina', 'mcginnis', 'lash', 'infernus', 'haze', 'grey_talon', 'graves', 'dynamo', 'celeste', 'calico', 'billy', 'yamato'],
+            // strong_antiheal: ['abrams', 'apollo', 'victor', 'mo_and_krill', 'lady_geist', 'shiv', 'rem', 'kelvin', 'ivy', 'silver', 'mirage', 'mina', 'mcginnis', 'haze', 'graves', 'celeste', 'calico', 'billy', 'yamato'],
+            // healbane: ['abrams', 'apollo', 'bebop', 'victor', 'mo_and_krill', 'lady_geist', 'shiv', 'rem', 'kelvin', 'ivy', 'warden', 'silver', 'seven', 'bebop', 'paige', 'mirage', 'mina', 'mcginnis', 'lash', 'infernus', 'haze', 'grey_talon', 'graves', 'dynamo', 'celeste', 'calico', 'billy'],
+            // toxic_bullets: 'Toxic Bullets',
+            // spirit_burn: 'Spirit Burn',
+            // decay: 'Decay',
+            // crippling: 'Crippling Headshot',
+            // inhibitor: 'Inhibitor',
+
+
+            // ANTI RESIST HEROES
+            tank_buster: [''],
+
+            // ANTI STUN HEROES
+            indomitable: ['abrams', 'apollo', 'bebop', 'billy', 'drifter', 'graves', 'grey_talon', 'haze', 'holiday', 'infernus', 'ivy', 'lady_geist', 'lash', 'mo_and_krill', 'paige', 'paradox', 'rem', 'seven', 'silver', 'sinclair', 'the_doorman', 'venator', 'victor', 'vindicta', 'vyper', 'warden', 'wraith'],
+            unstoppable: ['abrams', 'apollo', 'billy', 'ivy', 'paige', 'paradox', 'rem', 'sinclair', 'venator', 'victor', 'vyper'],
+            counterspell: ['abrams', 'apollo', 'bebop', 'billy', 'grey_talon', 'infernus', 'ivy', 'lady_geist', 'lash', 'mo_and_krill', 'paige', 'paradox', 'rem', 'seven', 'sinclair', 'the_doorman', 'venator', 'victor', 'warden'],
+            ethereal_shift: [],
+
+            // ANTI FIGHT HEROES
+            rebuttal: ['abrams', 'calico', 'billy', 'celeste', 'apollo', 'silver', 'victor'],
+
+            // ANTI SPIRIT HEROES ITEMS
+            spellbreaker: ['apollo', 'bebop', 'calico', 'celeste', 'dynamo', 'holiday', 'lady_geist', 'lash', 'mina', 'mirage', 'paradox', 'rem', 'shiv', 'sinclair', 'victor', 'viscous', 'yamato', 'wraith', 'paige'],
+            spirit_shielding: [],
+            spirit_resilience: ['apollo', 'bebop', 'calico', 'celeste', 'dynamo', 'holiday', 'lady_geist', 'lash', 'mina', 'mirage', 'paradox', 'rem', 'shiv', 'sinclair', 'victor', 'viscous', 'yamato', 'wraith', 'paige'],
+            silence_wave: ['apollo', 'billy', 'celeste', 'calico', 'dynamo', 'drifter', 'holiday', 'mina', 'mirage', 'infernus', 'pocket', 'lady_geist', 'lash', 'sinclair', 'the_doorman', 'shiv', 'viscous', 'yamato'],
+
+            // ANTI EFFECTS HEROES
+            dispel_magic: ['haze', 'infernus', 'mirage', 'mo_and_krill', 'drifter', 'lady_geist', 'mina', 'paradox', 'seven', 'warden', 'the_doorman', 'shiv'],
+            plated_armor: ['haze', 'infernus', 'mirage', 'mina'],
+
+            // ANTI MOVEMENT HEROES 
+            slowing_hex: ['abrams', 'pocket', 'lash', 'mina', 'rem', 'holiday', 'apollo', 'wraith', 'shiv', 'vindicta', 'grey_talon', 'mo_and_krill', 'dynamo', 'celeste', 'calico'],
+
+            mystick_slow: [],
+
+            // ANTI GUN HEROES
+            bullet_resilience: ['bebop', 'billy', 'drifter', 'grey_talon', 'haze', 'holiday', 'lady_geist', 'mcginnis', 'pocket', 'silver', 'venator', 'victor', 'vindicta', 'vyper', 'warden', 'wraith'],
+            rusted_barrel: [],
+            suppressor: [],
+            metal_skin: ['haze', 'vyper', 'silver'],
+            escalating: ['haze', 'wraith', 'venator', 'victor', 'silver', 'holiday', 'grey_talon', 'vyper'],
+            return_fire: ['haze', 'vyper', 'vindicta'],
+            phantom_strike: ['grey_talon', 'vindicta', 'holiday', 'lash'],
+            disarming_hex: [],
+
+            // RUN AWAY
+            superior_stamina: [],
+        };
+
+        // Инверсия: предмет → герои  ==>  герой → предметы
+        function toHeroList(itemToHeroes) {
+            const heroToItems = {};
+
+            for (const [itemId, heroIds] of Object.entries(itemToHeroes)) {
+                for (const heroId of heroIds) {
+                    (heroToItems[heroId] ??= []).push(itemId);
+                }
+            }
+
+            return Object.entries(HEROES).map(([heroId, name]) => ({
+                id: heroId,
+                name,
+                items: (heroToItems[heroId] ?? []).map(itemId => ITEMS[itemId] ?? itemId),
+            }));
+        }
+
+        // selectedHeroIds — Set или массив id выбранных героев
+        function buildResults(selectedHeroIds, itemToHeroes) {
+            const selected = new Set(selectedHeroIds);
+
+            return Object.entries(itemToHeroes)
+                .map(([itemId, heroIds]) => {
+                    // const matched = heroIds.filter(id => selected.has(id));
+                    const matched = heroIds.filter(id => selected.has(id));
+
+                    return {
+                        id: itemId,
+                        name: ITEMS[itemId] ?? itemId,
+                        heroes: matched,               // массив id выбранных героев
+                        heroNames: matched.map(id => HEROES[id] ?? id),
+                        count: matched.length,         // сколько выбранных контрит
+                    };
+                })
+                .filter(r => r.count > 0)          // оставляем только релевантные
+                .sort((a, b) => b.count - a.count); // больше контрит — выше
+        }
+
+
+        const heroes = toHeroList(ITEM_TO_HEROES);
+        console.log(heroes);
+
+        const resetBtn = document.getElementById('reset');
+
+
+        // === 2. Состояние ===
+        const activeHeroes = new Set();   // id активных карточек
+        let itemsPool = [];               // массив предметов всех активных героев (с повторами)
+
+        // === 3. Рендер карточек ===
+        const grid = document.getElementById('grid');
+        heroes.forEach(h => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.dataset.id = h.id;
+            // ВАЖНО ДЛЯ ДЕБАГА И ПРОСМОТРА
+            // card.innerHTML = `
+            //   <div class="name">${h.name}</div>
+            //   <div class="items">${h.items.join(', ')}</div>
+            // `;
+            card.innerHTML = `
+              <div class="name">${h.name}</div>
+            `;
+            card.addEventListener('click', () => toggleHero(h.id));
+            grid.appendChild(card);
+        });
+
+        // Сброс
+        resetBtn.addEventListener('click', () => {
+            activeHeroes.clear();
+            updateUI();
+            // container
+            //     .querySelectorAll('input[type="checkbox"]')
+            //     .forEach(cb => { cb.checked = false; });
+
+            // // Если есть доп. логика (подсветка, фильтрация) — вызовите её
+            // applyFilters();
+        });
+
+        // === 4. Переключение карточки ===
+        function toggleHero(id) {
+            if (activeHeroes.has(id)) {
+                activeHeroes.delete(id);
+            } else {
+                activeHeroes.add(id);
+            }
+            updateUI();
+        }
+
+        // === 5. Полная пересборка пула предметов ===
+        function rebuildPool() {
+            itemsPool = [];
+            activeHeroes.forEach(id => {
+                const hero = heroes.find(h => h.id === id);
+                if (hero) itemsPool.push(...hero.items); // добавляем все предметы героя
+            });
+        }
+
+        // === 6. Подсчёт повторов и сортировка ===
+        function getSortedCounts() {
+            const counter = {}; // { itemName: count }
+            for (const item of itemsPool) {
+                counter[item] = (counter[item] || 0) + 1;
+            }
+            // Превращаем в массив объектов [{item, count}, ...]
+            return Object.entries(counter)
+                .map(([item, count]) => ({ item, count }))
+                .sort((a, b) => b.count - a.count); // от большего к меньшему
+        }
+
+        // === 7. Обновление интерфейса ===
+        function updateUI() {
+
+            const selected = [...activeHeroes]
+            const results = buildResults(selected, ITEM_TO_HEROES);
+
+
+            // подсветка карточек
+            document.querySelectorAll('.card').forEach(card => {
+                card.classList.toggle('active', activeHeroes.has(card.dataset.id));
+            });
+
+            rebuildPool();
+            const sorted = getSortedCounts();
+
+            const resultEl = document.getElementById('result');
+            if (sorted.length === 0) {
+                resultEl.textContent = 'Выбери хотя бы одного героя';
+                return;
+            }
+
+            //         resultEl.innerHTML = sorted.map(({ item, count }) => `
+            //   <div class="result-row">
+            //     <span>${item}</span>
+            //     <span class="count count-${count}">${count}</span>
+            //   </div>
+            // `).join('');
+
+            // <div class="result__heroes">${r.heroNames.map(name => `<span class="result__hero">${name}</span>`).join(',')}</div>
+
+            resultEl.innerHTML = results.map(r => `
+    <div class="result-row">
+      <div class="result__item">${r.name}</div>
+      <div class="result__heroes">${r.heroNames.join(', ')}</div>
+      <div class="result__count count-${Math.min(r.count, 6)}">${r.count}</div>
+    </div>
+  `).join('');
+
+
+
+        }
+
+
+    </script>
+
+</body>
+
+</html>
