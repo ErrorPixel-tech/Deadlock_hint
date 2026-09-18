@@ -139,6 +139,7 @@
             color: #4caf50;
         }
 
+
         /* зелёный */
         .count-2 {
             color: #8bc34a;
@@ -159,6 +160,17 @@
 
         .count-6 {
             color: #f44336;
+        }
+
+        /* Отступ только когда следующая цифра отличается от текущей */
+
+        /* Отступ сверху, если у текущего ряда count отличается от предыдущего */
+        .result-row:has(.count-6)+.result-row:not(:has(.count-6)),
+        .result-row:has(.count-5)+.result-row:not(:has(.count-5)),
+        .result-row:has(.count-4)+.result-row:not(:has(.count-4)),
+        .result-row:has(.count-3)+.result-row:not(:has(.count-3)),
+        .result-row:has(.count-2)+.result-row:not(:has(.count-2)) {
+            margin-top: 14px;
         }
     </style>
 </head>
@@ -183,7 +195,7 @@
             monster_rounds: { name: 'Monster Rounds', icon: 'icons/monster_rounds.webp' },
 
             // SAVE TEAMMATES
-            divine_barrier: {name: 'Divine Barrier', icon: 'icons/divine_barrier.webp'},
+            divine_barrier: { name: 'Divine Barrier', icon: 'icons/divine_barrier.webp' },
 
             // ANTI FLIGHT AND ULT
             knockdown: { name: 'Knockdown', icon: 'icons/knockdown.png' },
@@ -311,9 +323,9 @@
 
             // ANTI STUN HEROES
             indomitable: ['abrams', 'apollo', 'bebop', 'billy', 'drifter', 'graves', 'grey_talon', 'haze', 'holiday', 'infernus', 'ivy', 'lady_geist', 'lash', 'mo_and_krill', 'paige', 'paradox', 'rem', 'seven', 'silver', 'sinclair', 'the_doorman', 'venator', 'victor', 'vindicta', 'vyper', 'warden', 'wraith'],
-            unstoppable: ['abrams', 'the_doorman', 'mo_and_krill', 'dynamo', 'apollo', 'billy', 'ivy', 'paige', 'paradox', 'rem', 'sinclair', 'venator', 'victor', 'vyper'],
+            unstoppable: ['abrams', 'vindicta', 'bebop', 'lash', 'seven', 'silver', 'wraith', 'haze', 'graves', 'grey_talon', 'celeste', 'warden', 'drifter', 'infernus', 'the_doorman', 'mo_and_krill', 'dynamo', 'apollo', 'billy', 'ivy', 'paige', 'paradox', 'rem', 'sinclair', 'venator', 'victor', 'vyper'],
             counterspell: ['abrams', 'apollo', 'calico', 'bebop', 'billy', 'grey_talon', 'infernus', 'ivy', 'lady_geist', 'lash', 'mo_and_krill', 'paige', 'paradox', 'rem', 'seven', 'sinclair', 'the_doorman', 'venator', 'victor', 'warden'],
-            ethereal_shift: [],
+            ethereal_shift: ['kelvin'],
 
             // ANTI FIGHT HEROES
             rebuttal: ['abrams', 'calico', 'billy', 'celeste', 'apollo', 'silver', 'victor'],
@@ -337,7 +349,7 @@
             // bullet_resilience: ['bebop', 'venator', 'billy', 'drifter', 'grey_talon', 'haze', 'holiday', 'lady_geist', 'mcginnis', 'pocket', 'silver', 'venator', 'victor', 'vindicta', 'vyper', 'warden', 'wraith'],
             rusted_barrel: ['graves', 'vyper', 'silver', 'mirage', 'infernus', 'drifter', 'haze', 'warden', 'wraith'],
             suppressor: [],
-            metal_skin: ['haze',  'wraith', 'vyper', 'silver', 'venator'],
+            metal_skin: ['haze', 'wraith', 'vyper', 'silver', 'venator'],
             // escalating: ['haze', 'wraith', 'venator', 'victor', 'silver', 'holiday', 'grey_talon', 'vyper'],
             return_fire: ['haze', 'wraith', 'vyper', 'silver', 'vindicta', 'venator'],
             // phantom_strike: ['grey_talon', 'vindicta', 'holiday', 'lash'],
@@ -388,7 +400,6 @@
 
 
         const heroes = toHeroList(ITEM_TO_HEROES);
-        console.log(heroes);
 
         const resetBtn = document.getElementById('reset');
 
@@ -478,6 +489,7 @@
                 resultEl.textContent = 'Выбери хотя бы одного героя';
                 return;
             }
+            console.log(result);
 
             resultEl.innerHTML = results.map(r => `
     <div class="result-row">
