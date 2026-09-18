@@ -96,7 +96,7 @@
 
         .result-row {
             display: grid;
-            grid-template-columns: 50px 150px auto 1fr;
+            grid-template-columns: auto 50px 150px auto 1fr;
             align-items: center;
             gap: 15px;
             padding: 6px 0;
@@ -121,6 +121,8 @@
 
         .result__count {
             margin-left: auto;
+            font-size: 18px;
+            font-weight: 500;
         }
 
         .result-row:last-child {
@@ -479,10 +481,10 @@
 
             resultEl.innerHTML = results.map(r => `
     <div class="result-row">
+        <div class="result__count count-${Math.min(r.count, 6)}">${r.count}</div>
         <img class="result__icon" src="${r.icon}" alt=" " />
         <div class="result__item">${r.name}</div>
         <div class="result__heroes">${r.heroNames.join(', ')}</div>
-        <div class="result__count count-${Math.min(r.count, 6)}">${r.count}</div>
     </div>
   `).join('');
 
