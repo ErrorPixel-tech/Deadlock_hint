@@ -184,6 +184,8 @@
         </header>
         <div class="grid" id="grid"></div>
 
+        <h2>Контестят мид-босса</h2>
+        <div class="result" id="dangerous_mid_boss">Выбери хотя бы одного героя</div>
         <h2>Контр-предметы (по частоте)</h2>
         <div class="result" id="result">Выбери хотя бы одного героя</div>
     </div>
@@ -231,6 +233,8 @@
             wraith: 'Wraith',
             yamato: 'Yamato',
         };
+
+        const DANGEROUS_MID_BOSS_HEROES = ['dynamo', 'lash', 'paradox', 'the_doorman', 'paige', 'sinclair', 'vyper', 'yamato'];
 
         const HEALING_HEROES = ['abrams', 'apollo', 'bebop', 'victor', 'mo_and_krill', 'lady_geist', 'shiv', 'rem', 'kelvin', 'ivy', 'warden', 'silver', 'seven', 'paige', 'mirage', 'mina', 'mcginnis', 'lash', 'infernus', 'haze', 'graves', 'dynamo', 'celeste', 'calico', 'billy', 'yamato'];
 
@@ -414,6 +418,11 @@
             }));
         }
 
+        function dangerousSelected(selectedHeroIds, dangerous) {
+            const selected = new Set(selectedHeroIds);
+            return dangerous.filter(id => selected.has(id));
+        }
+
         // selectedHeroIds — Set или массив id выбранных героев
         function buildResults(selectedHeroIds, itemToHeroes) {
             const selected = new Set(selectedHeroIds);
@@ -522,7 +531,8 @@
         // === 7. Обновление интерфейса ===
         function updateUI() {
 
-            const selected = [...activeHeroes]
+            const selected = [...activeHeroes];
+            renderDangerousHeroes(selected);
             const results = buildResults(selected, ITEM_TO_HEROES);
 
             const groups = groupbByTier(results);
@@ -578,6 +588,26 @@
         }
 
 
+        function renderDangerousHeroes(selectedHeroIds) {
+            const container = document.querySelector('#dangerous_mid_boss');
+            if (!container) return;
+
+            const dangerous = dangerousSelected(selectedHeroIds, DANGEROUS_MID_BOSS_HEROES);
+
+            if (!dangerous.length) {
+                container.innerHTML = '';
+                return;
+            }
+            // <h2>Опасные герои в выборке</h2>
+            // 
+            container.innerHTML = `
+    <div class="dangerous-list">
+      ${dangerous
+                    .map(id => `<span class="dangerous">${HEROES[id] ?? id}</span>`)
+                    .join(', ')}
+    </div>
+  `;
+        }
     </script>
 
 </body>
