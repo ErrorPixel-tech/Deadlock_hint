@@ -393,7 +393,9 @@
                         icon: item.icon,
                         tier: item.tier,
                         heroes: matched,               // массив id выбранных героев
-                        heroNames: matched.map(id => HEROES[id] ?? id),
+                        heroNames: matched
+                            .map(id => HEROES[id] ?? id)
+                            .sort((a, b) => a.localeCompare(b)),
                         count: matched.length,         // сколько выбранных контрит
                     };
                 })
