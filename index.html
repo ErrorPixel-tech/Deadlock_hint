@@ -12,6 +12,63 @@
             padding: 20px;
         }
 
+        /* blacklist */
+
+        .result-row {
+            /* display: block; */
+            position: relative;
+            /* cursor: pointer; */
+            /* user-select: none; */
+        }
+
+        .result-row:hover::before {
+            content: "x";
+            position: absolute;
+            top: 20px;
+            font-size: 60px;
+            font-weight: 500;
+            color: red;
+            z-index: 10;
+            transform: translate(-50%, -50%);
+            left: 65px;
+            pointer-events: none;
+        }
+
+        .result__icon:hover {
+            filter: brightness(1.2);
+            background-color: #692621;
+        }
+
+        .result__icon:hover::before {}
+
+        .blacklist__items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 8px 0;
+        }
+
+        .blacklist__item {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 8px;
+            border-radius: 6px;
+            background: rgba(244, 67, 54, 0.15);
+        }
+
+        .blacklist__icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .blacklist__clear {
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        /*  */
         .radio-category {
             display: flex;
             flex-wrap: wrap;
@@ -248,7 +305,10 @@
 
         <div id="dangerous_mid_boss"></div>
 
+        <section id="blacklist"></section>
+
         <div class="category-filter" id="categoryFilter"></div>
+
 
         <h2>Контр-предметы (по частоте)</h2>
         <div class="result" id="result">Выбери хотя бы одного героя</div>
@@ -321,8 +381,8 @@
             { id: 'antiult', label: 'Сбить ульту', icon: 'icons/knockdown.png' },
             { id: 'heal', label: 'Хил', icon: 'icons/rescue_beam.webp' },
             { id: 'antistun', label: 'Анти-стан', icon: 'icons/unstoppable.webp' },
-            { id: 'spirit_resists', label: 'Анти-спирит', icon: 'icons/spirit_resilience.webp' },
-            { id: 'gun_resists', label: 'Анти-ган', icon: 'icons/bullet_resilience.webp' },
+            { id: 'anti_spirit', label: 'Анти-спирит', icon: 'icons/spirit_resilience.webp' },
+            { id: 'anti_gun', label: 'Анти-ган', icon: 'icons/bullet_resilience.webp' },
             { id: 'catch', label: 'Поймать', icon: 'icons/slowing_hex.png' },
         ];
 
@@ -331,7 +391,7 @@
             if (!filterEl) return;
 
             filterEl.innerHTML = `
-            <h2>Доп настройки</h2>
+            <h2>Фильтры</h2>
             <div class="radio-category">
     <label class="check-style">
       <input class="category-checkbox" type="radio" name="category" value="" checked />
@@ -383,7 +443,7 @@
 
             // CANCELING
             knockdown: { name: 'Knockdown', icon: 'icons/knockdown.png', tier: 3, categories: ['antiult', 'support', 'catch', 'antistun'] },
-            curse: { name: 'Curse', icon: 'icons/curse.png', tier: 4, categories: ['antiult', 'catch', 'antistun'] },
+            curse: { name: 'Curse', icon: 'icons/curse.png', tier: 4, categories: ['antiult', 'catch', 'antistun', 'support'] },
 
 
             // ANTI HEAL
@@ -410,11 +470,15 @@
             rebuttal: { name: 'Rebuttal', icon: 'icons/rebuttal.webp', tier: 1 },
 
             // ANTI SPIRIT HEROES ITEMS
-            spellbreaker: { name: 'Spellbreaker', icon: 'icons/spellbreaker.webp', tier: 4, categories: ['anti_spirit'] },
+            // 2
             spirit_shielding: 'Spirit Shielding',
+            // 3
             spirit_resilience: { name: 'Spirit Resilience', icon: 'icons/spirit_resilience.webp', tier: 3, categories: ['anti_spirit'] },
             silence_wave: { name: 'Silence Wave', icon: 'icons/silence_wave.webp', tier: 3, categories: ['anti_spirit', 'catch'] },
-
+            // 4
+            spellbreaker: { name: 'Spellbreaker', icon: 'icons/spellbreaker.webp', tier: 4, categories: ['anti_spirit'] },
+            silencer: { name: 'Silencer', icon: 'icons/silencer.webp', tier: 4, categories: ['anti_spirit'] },
+            scourge: { name: 'Scourge', icon: 'icons/scourge.png', tier: 4, categories: ['anti_spirit'] },
 
             // ANTI EFFECTS HEROES
             dispel_magic: { name: 'Dispel Magic', icon: 'icons/dispel_magic.webp', tier: 3, categories: ['anti_spirit'] },
@@ -429,15 +493,20 @@
             capacitor: { name: 'Capacitor', icon: 'icons/capacitor.webp', tier: 4, categories: ['catch'] },
 
             // ANTI GUN HEROES
-            suppressor: { name: 'Suppressor', icon: 'icons/suppressor.webp', tier: 2, categories: ['anti_gun'] },
-            bullet_resilience: { name: 'Bullet Resilience', icon: 'icons/bullet_resilience.webp', tier: 3, categories: ['anti_gun'] },
+            // 1
             rusted_barrel: { name: 'Rusted Barrel', icon: 'icons/rusted_barrel.webp', tier: 1, categories: ['anti_gun'] },
-            metal_skin: { name: 'Metal Skin', icon: 'icons/metal_skin.webp', tier: 3, categories: ['anti_gun'] },
             escalating: 'Escalating Resilience',
+            // 2
+            suppressor: { name: 'Suppressor', icon: 'icons/suppressor.webp', tier: 2, categories: ['anti_gun'] },
             return_fire: { name: 'Return Fire', icon: 'icons/return_fire.webp', tier: 2, categories: ['anti_gun'] },
-            phantom_strike: 'Phantom Strike',
-            disarming_hex: 'Disarming Hex',
+            // 3
+            metal_skin: { name: 'Metal Skin', icon: 'icons/metal_skin.webp', tier: 3, categories: ['anti_gun'] },
+            bullet_resilience: { name: 'Bullet Resilience', icon: 'icons/bullet_resilience.webp', tier: 3, categories: ['anti_gun'] },
+            disarming_hex: {name: 'Disarming Hex', icon: 'icons/disarming_hex.webp', tier: 3, categories: ['anti_gun']},
+            // 4
+            phantom_strike: {name: 'Phantom Strike', icon: 'icons/phantom_strike.webp', tier: 4, categories: ['anti_gun']},
             juggernaut: { name: 'Juggernaut', icon: 'icons/juggernaut.webp', tier: 4, categories: ['anti_gun'] },
+            plated_armor: {name: 'Plated Armor', icon: 'icons/plated_armor.webp', tier: 4, categories: ['anti_gun']},
 
             // RUN AWAY
             superior_stamina: 'Superior Stamina',
@@ -449,7 +518,7 @@
             monster_rounds: SUMMONER_HEROES,
 
             // SAVE TEAMMATES
-            divine_barrier: ['pocket'],
+            divine_barrier: [...['abrams', 'apollo', 'bebop', 'billy', 'dynamo', 'graves', 'haze', 'holiday', 'ivy', 'lash', 'mina', 'mo_and_krill', 'paige', 'paradox', 'rem', 'silver', 'sinclair', 'the_doorman', 'venator', 'victor', 'vindicta', 'viscous', 'warden'], ...['pocket']],
             rescue_beam: ['abrams', 'apollo', 'bebop', 'billy', 'dynamo', 'graves', 'haze', 'holiday', 'ivy', 'lash', 'mina', 'mo_and_krill', 'paige', 'paradox', 'rem', 'silver', 'sinclair', 'the_doorman', 'venator', 'victor', 'vindicta', 'viscous', 'warden'],
 
             // ANTI FLIGHT AND ULT
@@ -484,13 +553,14 @@
 
             // ANTI SPIRIT 
             // 2
-            spirit_shielding: SPIRIT_HEROES,
+            spirit_shielding: ['А это точно хорошая шмотка?'],
             // 3
             silence_wave: ['abrams', 'wraith', 'haze', 'ivy', 'rem', 'victor', 'apollo', 'billy', 'celeste', 'calico', 'dynamo', 'drifter', 'holiday', 'mina', 'mirage', 'infernus', 'pocket', 'lady_geist', 'lash', 'sinclair', 'the_doorman', 'shiv', 'viscous', 'yamato'],
             spirit_resilience: SPIRIT_HEROES,
             // 4
             spellbreaker: ['apollo', 'bebop', 'kelvin', 'calico', 'celeste', 'dynamo', 'holiday', 'lady_geist', 'lash', 'mina', 'mirage', 'paradox', 'shiv', 'sinclair', 'victor', 'viscous', 'yamato', 'wraith', 'paige'],
-
+            silencer: SPIRIT_HEROES,
+            scourge: ['А это точно контр шмотка?'],
 
             // ANTI EFFECTS HEROES
             dispel_magic: ['bebop', 'vindicta', 'graves', 'haze', 'infernus', 'mirage', 'mo_and_krill', 'drifter', 'lady_geist', 'mina', 'paradox', 'seven', 'warden', 'the_doorman', 'shiv', 'vyper'],
@@ -515,8 +585,8 @@
             disarming_hex: GUN_HEROES,
             // escalating: ['haze', 'wraith', 'venator', 'victor', 'silver', 'holiday', 'grey_talon', 'vyper'],
             // 4
-            // phantom_strike: ['grey_talon', 'vindicta', 'holiday', 'lash'],
-            // plated_armor: ['haze', 'infernus', 'mirage', 'mina'],
+            phantom_strike: GUN_HEROES,
+            plated_armor: ['haze', 'infernus', 'mirage', 'mina', 'vyper'],
             juggernaut: GUN_HEROES,
 
             // RUN AWAY
@@ -552,12 +622,13 @@
             return Object.entries(itemToHeroes)
                 .map(([itemId, heroIds]) => {
                     const matched = heroIds.filter(id => selected.has(id));
-                    const item = ITEMS[itemId] ?? { name: itemId, icon: '', tier: 0, };
+                    const item = ITEMS[itemId] ?? { name: itemId, icon: '', tier: 0, categories: [] };
                     return {
                         id: itemId,
                         name: item.name ?? itemId,
                         icon: item.icon,
                         tier: item.tier,
+                        categories: item.categories ?? [],
                         heroes: matched,               // массив id выбранных героев
                         heroNames: matched
                             .map(id => HEROES[id] ?? id)
@@ -658,7 +729,9 @@
             renderCategoryFilter();
             const results = buildResults(selected, ITEM_TO_HEROES);
 
-            const groups = groupbByTier(results);
+            const visible = results.filter(r => !blacklist.has(r.id));
+            const groups = groupbByTier(visible);
+
 
             // подсветка карточек
             document.querySelectorAll('.card').forEach(card => {
@@ -669,11 +742,10 @@
             const sorted = getSortedCounts();
 
             const resultEl = document.getElementById('result');
-            if (sorted.length === 0) {
+            if (visible.length === 0) {
                 resultEl.textContent = 'Выбери хотя бы одного героя';
                 return;
-            }
-            console.log(result);
+            };
 
             resultEl.innerHTML = Object.entries(groups)
                 .filter(([, items]) => items.length)     // пропускаем пустые тиры
@@ -696,6 +768,8 @@
       </section>
     `).join('');
 
+            renderBlacklist();
+
             //             resultEl.innerHTML = results.map(r => `
             //     <div class="result-row">
             //         <div class="result__count count-${Math.min(r.count, 6)}">${r.count}</div>
@@ -709,6 +783,68 @@
 
 
         }
+
+        // BLACK LIST
+        // const blacklist = new Set(); // хранит id предметов
+        const blacklist = new Set(
+            JSON.parse(localStorage.getItem('blacklist') ?? '[]')
+        );
+        function saveBlacklist() {
+            localStorage.setItem('blacklist', JSON.stringify([...blacklist]));
+        }
+        const resultsEl = document.querySelector('#result');
+
+        resultsEl.addEventListener('click', (e) => {
+            const counter = e.target.closest('.result-row');
+            if (!counter) return;
+
+            const row = counter.closest('.result-row');
+            const itemId = row?.dataset.itemId;
+            if (!itemId) return;
+
+            blacklist.add(itemId);
+            saveBlacklist();
+            updateUI(); // перерисовать и список, и чёрный список
+        });
+
+        function renderBlacklist() {
+            const container = document.querySelector('#blacklist');
+            if (!container) return;
+
+            if (!blacklist.size) {
+                container.innerHTML = '';
+                return;
+            }
+
+            container.innerHTML = `
+    <h2>Скрытое</h2>
+    <div class="blacklist__items">
+      ${[...blacklist].map(id => {
+                const item = ITEMS[id];
+                const name = item?.name ?? id;
+                const icon = item?.icon ?? '';
+                return `
+          <div class="blacklist__item">
+            ${icon ? `<img class="blacklist__icon" src="${icon}" alt="">` : ''}
+            <span class="blacklist__name">${name}</span>
+          </div>
+        `;
+            }).join('')}
+    </div>
+    <button type="button" class="blacklist__clear btn btn--reset">Очистить список</button>
+  `;
+        };
+
+        document.querySelector('#blacklist').addEventListener('click', (e) => {
+            if (!e.target.closest('.blacklist__clear')) return;
+
+            blacklist.clear();
+            saveBlacklist();
+            updateUI();
+        });
+
+
+        // 
 
 
         function renderDangerousHeroes(selectedHeroIds) {
