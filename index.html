@@ -20,7 +20,24 @@
             align-content: center;
         }
 
+        .check-style:has(.category-checkbox:checked) {
+            background: #337535;
+            border-color: #4ade80;
+            background: #1e3a2a;
+            box-shadow: 0 0 12px rgba(74, 222, 128, .4);
+        }
+
+        .category-checkbox {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+            pointer-events: none;
+        }
+
         .check-style {
+            border: 2px solid #444;
+            position: relative;
             background-color: #2a2a33;
             padding: 2px 12px 2px 0px;
             border-radius: 4px;
@@ -34,6 +51,7 @@
 
         .category-icon {
             width: 40px;
+            /* height: auto; */
         }
 
         .result-row.is-highlighted {
@@ -316,12 +334,12 @@
             <h2>Доп настройки</h2>
             <div class="radio-category">
     <label class="check-style">
-      <input type="radio" name="category" value="" checked />
+      <input class="category-checkbox" type="radio" name="category" value="" checked />
       Все
     </label>
     ${CATEGORIES.map(c => `
       <label class="check-style">
-        <input type="radio" name="category" value="${c.id}" />
+        <input class="category-checkbox" type="radio" name="category" value="${c.id}" />
         <img class="category-icon" src="${c.icon}" alt="">
         ${c.label}
       </label>
