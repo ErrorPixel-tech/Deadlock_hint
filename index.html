@@ -12,6 +12,38 @@
             padding: 20px;
         }
 
+        .radio-category {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            /* align-items: center; */
+            align-content: center;
+        }
+
+        .check-style {
+            background-color: #2a2a33;
+            padding: 2px 12px 2px 0px;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            user-select: none;
+            font-size: 20px;
+        }
+
+        .category-icon {
+            width: 40px;
+        }
+
+        .result-row.is-highlighted {
+            /* outline: 2px solid #ffc107; */
+            /* outline-offset: 2px; */
+            /* border-radius: 6px; */
+            background-color: rgb(34, 60, 35);
+            /* transition: outline-color 0.15s ease; */
+        }
+
         .page-wrapper {
             width: 100%;
             max-width: 1200px;
@@ -109,6 +141,14 @@
             object-fit: cover;
         }
 
+        .dangerous-list {
+            display: inline-flex;
+            background-color: #1a1a1f;
+            padding: 5px;
+            border-radius: 6px;
+            gap: 5px;
+        }
+
         .result__heroes {
             display: flex;
             background-color: #1a1a1f;
@@ -120,6 +160,7 @@
         .result__hero {}
 
         .result__count {
+            padding: 10px;
             margin-left: auto;
             font-size: 18px;
             font-weight: 500;
@@ -162,6 +203,8 @@
             color: #f44336;
         }
 
+
+
         /* Отступ только когда следующая цифра отличается от текущей */
 
         /* Отступ сверху, если у текущего ряда count отличается от предыдущего */
@@ -182,10 +225,13 @@
             <h1>Выбери героев — увидишь, какие предметы их контрят чаще всего</h1>
             <button id="reset" class="btn btn--reset">Сбросить выбор</button>
         </header>
+
         <div class="grid" id="grid"></div>
 
-        <h2>Контестят мид-босса</h2>
-        <div class="result" id="dangerous_mid_boss">Выбери хотя бы одного героя</div>
+        <div id="dangerous_mid_boss"></div>
+
+        <div class="category-filter" id="categoryFilter"></div>
+
         <h2>Контр-предметы (по частоте)</h2>
         <div class="result" id="result">Выбери хотя бы одного героя</div>
     </div>
@@ -234,7 +280,7 @@
             yamato: 'Yamato',
         };
 
-        const DANGEROUS_MID_BOSS_HEROES = ['dynamo', 'lash', 'paradox', 'the_doorman', 'paige', 'sinclair', 'vyper', 'yamato'];
+        const DANGEROUS_MID_BOSS_HEROES = ['abrams', 'billy', 'dynamo', 'drifter', 'infernus', 'ivy', 'lash', 'paradox', 'paige', 'rem', 'sinclair', 'the_doorman', 'vyper', 'yamato'];
 
         const HEALING_HEROES = ['abrams', 'apollo', 'bebop', 'victor', 'mo_and_krill', 'lady_geist', 'shiv', 'rem', 'kelvin', 'ivy', 'warden', 'silver', 'seven', 'paige', 'mirage', 'mina', 'mcginnis', 'lash', 'infernus', 'haze', 'graves', 'dynamo', 'celeste', 'calico', 'billy', 'yamato'];
 
@@ -250,72 +296,130 @@
 
         const PUNCHINGH_HEROES = ['abrams', 'calico', 'billy', 'celeste', 'apollo', 'silver', 'victor', 'viscous'];
 
+        //  КАТЕГОРИИ РАДИО КНОПОК
+        const CATEGORIES = [
+            { id: 'antiheal', label: 'Антихил', icon: 'icons/healbane.webp' },
+            { id: 'support', label: 'Помочь тиммейтам', icon: 'icons/rescue_beam.webp' },
+            { id: 'antiult', label: 'Сбить ульту', icon: 'icons/knockdown.png' },
+            { id: 'heal', label: 'Хил', icon: 'icons/rescue_beam.webp' },
+            { id: 'antistun', label: 'Анти-стан', icon: 'icons/unstoppable.webp' },
+            { id: 'spirit_resists', label: 'Анти-спирит', icon: 'icons/spirit_resilience.webp' },
+            { id: 'gun_resists', label: 'Анти-ган', icon: 'icons/bullet_resilience.webp' },
+            { id: 'catch', label: 'Поймать', icon: 'icons/slowing_hex.png' },
+        ];
+
+        function renderCategoryFilter() {
+            const filterEl = document.querySelector('#categoryFilter');
+            if (!filterEl) return;
+
+            filterEl.innerHTML = `
+            <h2>Доп настройки</h2>
+            <div class="radio-category">
+    <label class="check-style">
+      <input type="radio" name="category" value="" checked />
+      Все
+    </label>
+    ${CATEGORIES.map(c => `
+      <label class="check-style">
+        <input type="radio" name="category" value="${c.id}" />
+        <img class="category-icon" src="${c.icon}" alt="">
+        ${c.label}
+      </label>
+    `).join('')}
+      </div>
+    `;
+        }
+
+        // СЛУШАТЕЛЬ КАТЕГОРИИ
+        let activeCategory = '';
+
+        document.querySelector('#categoryFilter').addEventListener('change', (e) => {
+            activeCategory = e.target.value; // '' | 'heal' | 'antiheal' | ...
+            applyCategoryHighlight();
+        });
+
+        function applyCategoryHighlight() {
+            const rows = document.querySelectorAll('.result-row');
+
+            rows.forEach(row => {
+                const itemId = row.dataset.itemId;
+                const item = ITEMS[itemId];
+
+                row.classList.remove('is-highlighted');
+
+                if (!activeCategory) return; // выбрано «Все» — ничего не подсвечиваем
+                if (!item?.categories?.includes(activeCategory)) return;
+
+                row.classList.add('is-highlighted');
+            });
+        }
+
+
         const ITEMS = {
             // KILL BOTS
             monster_rounds: { name: 'Monster Rounds', icon: 'icons/monster_rounds.webp', tier: 1 },
 
             // SAVE TEAMMATES
-            divine_barrier: { name: 'Divine Barrier', icon: 'icons/divine_barrier.webp', tier: 4 },
-            rescue_beam: { name: 'Rescue Beam', icon: 'icons/rescue_beam.webp', tier: 3 },
+            divine_barrier: { name: 'Divine Barrier', icon: 'icons/divine_barrier.webp', tier: 4, categories: ['support'] },
+            rescue_beam: { name: 'Rescue Beam', icon: 'icons/rescue_beam.webp', tier: 3, categories: ['support'] },
 
             // CANCELING
-            knockdown: { name: 'Knockdown', icon: 'icons/knockdown.png', tier: 3 },
-            curse: { name: 'Curse', icon: 'icons/curse.png', tier: 4 },
+            knockdown: { name: 'Knockdown', icon: 'icons/knockdown.png', tier: 3, categories: ['antiult', 'support', 'catch', 'antistun'] },
+            curse: { name: 'Curse', icon: 'icons/curse.png', tier: 4, categories: ['antiult', 'catch', 'antistun'] },
 
 
-            // MORE ANTI HEAL
-            healbane: { name: 'Healbane', icon: 'icons/healbane.webp', tier: 2 },
-            toxic_bullets: { name: 'Toxic Bullets', icon: 'icons/toxic_bullets.webp', tier: 3 },
-            decay: { name: 'Decay', icon: 'icons/decay.webp', tier: 3 },
-            crippling: { name: 'Crippling Headshot', icon: 'icons/crippling_headshot.webp', tier: 4 },
-            spirit_burn: { name: 'Spirit Burn', icon: 'icons/spirit_burn.webp', tier: 4 },
-            inhibitor: { name: 'Inhibitor', icon: 'icons/inhibitor.webp', tier: 4 },
+            // ANTI HEAL
+            healbane: { name: 'Healbane', icon: 'icons/healbane.webp', tier: 2, categories: ['antiheal'] },
+            toxic_bullets: { name: 'Toxic Bullets', icon: 'icons/toxic_bullets.webp', tier: 3, categories: ['antiheal'] },
+            decay: { name: 'Decay', icon: 'icons/decay.webp', tier: 3, categories: ['antiheal'] },
+            crippling: { name: 'Crippling Headshot', icon: 'icons/crippling_headshot.webp', tier: 4, categories: ['antiheal'] },
+            spirit_burn: { name: 'Spirit Burn', icon: 'icons/spirit_burn.webp', tier: 4, categories: ['antiheal'] },
+            inhibitor: { name: 'Inhibitor', icon: 'icons/inhibitor.webp', tier: 4, categories: ['antiheal'] },
 
 
             // ANTI RESIST HEROES
             tank_buster: 'Tank Buster',
 
-            // ANTI CC AND ANTI DMG
-            debaff_reducer: { name: 'Debaff Reducer', icon: 'icons/debaff_reducer.webp', tier: 2 },
-            counterspell: { name: 'Counterspell', icon: 'icons/counterspell.webp', tier: 3 },
 
             // ANTI CC
-            indomitable: { name: 'Indomitable', icon: 'icons/indomitable.webp', tier: 4 },
-            unstoppable: { name: 'Unstoppable', icon: 'icons/unstoppable.webp', tier: 4 },
-            ethereal_shift: { name: 'Ethereal Shift', icon: 'icons/ethereal_shift.png', tier: 4 },
+            debaff_reducer: { name: 'Debaff Reducer', icon: 'icons/debaff_reducer.webp', tier: 2, categories: ['antistun'] },
+            counterspell: { name: 'Counterspell', icon: 'icons/counterspell.webp', tier: 3, categories: ['antistun'] },
+            indomitable: { name: 'Indomitable', icon: 'icons/indomitable.webp', tier: 4, categories: ['antistun'] },
+            unstoppable: { name: 'Unstoppable', icon: 'icons/unstoppable.webp', tier: 4, categories: ['antistun'] },
+            ethereal_shift: { name: 'Ethereal Shift', icon: 'icons/ethereal_shift.png', tier: 4, categories: ['antistun', 'anti_spirit'] },
 
             // ANTI FIGHT HEROES
             rebuttal: { name: 'Rebuttal', icon: 'icons/rebuttal.webp', tier: 1 },
 
             // ANTI SPIRIT HEROES ITEMS
-            spellbreaker: { name: 'Spellbreaker', icon: 'icons/spellbreaker.webp', tier: 4 },
+            spellbreaker: { name: 'Spellbreaker', icon: 'icons/spellbreaker.webp', tier: 4, categories: ['anti_spirit'] },
             spirit_shielding: 'Spirit Shielding',
-            spirit_resilience: { name: 'Spirit Resilience', icon: 'icons/spirit_resilience.webp', tier: 3 },
-            silence_wave: { name: 'Silence Wave', icon: 'icons/silence_wave.webp', tier: 3 },
+            spirit_resilience: { name: 'Spirit Resilience', icon: 'icons/spirit_resilience.webp', tier: 3, categories: ['anti_spirit'] },
+            silence_wave: { name: 'Silence Wave', icon: 'icons/silence_wave.webp', tier: 3, categories: ['anti_spirit', 'catch'] },
 
 
             // ANTI EFFECTS HEROES
-            dispel_magic: { name: 'Dispel Magic', icon: 'icons/dispel_magic.webp', tier: 3 },
+            dispel_magic: { name: 'Dispel Magic', icon: 'icons/dispel_magic.webp', tier: 3, categories: ['anti_spirit'] },
             plated_armor: 'Plated Armor',
 
             // ANTI MOVEMENT HEROES 
             // 2
-            slowing_hex: { name: 'Slowing Hex', icon: 'icons/slowing_hex.png', tier: 2 },
+            slowing_hex: { name: 'Slowing Hex', icon: 'icons/slowing_hex.png', tier: 2, categories: ['catch'] },
             mystick_slow: 'Mystick Slow',
             // 4
-            vortex_web: { name: 'Vortex Web', icon: 'icons/vortex_web.webp', tier: 4 },
-            capacitor: { name: 'Capacitor', icon: 'icons/capacitor.webp', tier: 4 },
+            vortex_web: { name: 'Vortex Web', icon: 'icons/vortex_web.webp', tier: 4, categories: ['catch'] },
+            capacitor: { name: 'Capacitor', icon: 'icons/capacitor.webp', tier: 4, categories: ['catch'] },
 
             // ANTI GUN HEROES
-            suppressor: { name: 'Suppressor', icon: 'icons/suppressor.webp', tier: 2 },
-            bullet_resilience: { name: 'Bullet Resilience', icon: 'icons/bullet_resilience.webp', tier: 3 },
-            rusted_barrel: { name: 'Rusted Barrel', icon: 'icons/rusted_barrel.webp', tier: 1 },
-            metal_skin: { name: 'Metal Skin', icon: 'icons/metal_skin.webp', tier: 3 },
+            suppressor: { name: 'Suppressor', icon: 'icons/suppressor.webp', tier: 2, categories: ['anti_gun'] },
+            bullet_resilience: { name: 'Bullet Resilience', icon: 'icons/bullet_resilience.webp', tier: 3, categories: ['anti_gun'] },
+            rusted_barrel: { name: 'Rusted Barrel', icon: 'icons/rusted_barrel.webp', tier: 1, categories: ['anti_gun'] },
+            metal_skin: { name: 'Metal Skin', icon: 'icons/metal_skin.webp', tier: 3, categories: ['anti_gun'] },
             escalating: 'Escalating Resilience',
-            return_fire: { name: 'Return Fire', icon: 'icons/return_fire.webp', tier: 2 },
+            return_fire: { name: 'Return Fire', icon: 'icons/return_fire.webp', tier: 2, categories: ['anti_gun'] },
             phantom_strike: 'Phantom Strike',
             disarming_hex: 'Disarming Hex',
-            juggernaut: { name: 'Juggernaut', icon: 'icons/juggernaut.webp', tier: 4 },
+            juggernaut: { name: 'Juggernaut', icon: 'icons/juggernaut.webp', tier: 4, categories: ['anti_gun'] },
 
             // RUN AWAY
             superior_stamina: 'Superior Stamina',
@@ -430,7 +534,7 @@
             return Object.entries(itemToHeroes)
                 .map(([itemId, heroIds]) => {
                     const matched = heroIds.filter(id => selected.has(id));
-                    const item = ITEMS[itemId] ?? { name: itemId, icon: '', tier: 0 };
+                    const item = ITEMS[itemId] ?? { name: itemId, icon: '', tier: 0, };
                     return {
                         id: itemId,
                         name: item.name ?? itemId,
@@ -533,6 +637,7 @@
 
             const selected = [...activeHeroes];
             renderDangerousHeroes(selected);
+            renderCategoryFilter();
             const results = buildResults(selected, ITEM_TO_HEROES);
 
             const groups = groupbByTier(results);
@@ -562,7 +667,7 @@
           ${items
                         .sort((a, b) => b.count - a.count)   // внутри тира — по count
                         .map(r => `
-              <div class="result-row">
+              <div class="result-row" data-item-id="${r.id}">
                 <div class="result__count count-${Math.min(r.count, 6)}">${r.count}</div>
                 <img class="result__icon" src="${r.icon}" alt="">
                 <div class="result__item">${r.name}</div>
@@ -598,15 +703,16 @@
                 container.innerHTML = '';
                 return;
             }
-            // <h2>Опасные герои в выборке</h2>
-            // 
             container.innerHTML = `
-    <div class="dangerous-list">
-      ${dangerous
-                    .map(id => `<span class="dangerous">${HEROES[id] ?? id}</span>`)
+            <h2>Украдут мид-босса </h2>
+            <div class="result">
+                <div class="dangerous-list">
+                    ${dangerous
+                    .map(id => `${HEROES[id]}`)
                     .join(', ')}
-    </div>
-  `;
+                </div>
+            </div>
+            `;
         }
     </script>
 
