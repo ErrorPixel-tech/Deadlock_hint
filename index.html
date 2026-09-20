@@ -21,32 +21,14 @@
             /* user-select: none; */
         }
 
-        .result-row:hover::before {
-            content: "x";
-            position: absolute;
-            top: 20px;
-            font-size: 60px;
-            font-weight: 500;
-            color: red;
-            z-index: 10;
-            transform: translate(-50%, -50%);
-            left: 65px;
-            pointer-events: none;
-        }
-
-        .result__icon:hover {
-            filter: brightness(1.2);
-            background-color: #692621;
-        }
-
-        .result__icon:hover::before {}
-
         .blacklist__items {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
             margin: 8px 0;
         }
+
+        
 
         .blacklist__item {
             display: inline-flex;
@@ -230,6 +212,21 @@
             padding: 5px;
             border-radius: 6px;
             gap: 5px;
+        }
+
+        .result__hide {
+            margin-left: auto;
+            margin-right: 20px;
+            opacity: 0;
+        }
+
+        .result-row:hover .result__hide {
+            opacity: 0.5;
+        }
+
+        .result-row:hover .result__hide:hover {
+            opacity: 1;
+            cursor: pointer;
         }
 
         .result__hero {}
@@ -762,6 +759,7 @@
                 <img class="result__icon" src="${r.icon}" alt="">
                 <div class="result__item">${r.name}</div>
                 <div class="result__heroes">${r.heroNames.join(', ')}</div>
+                <div id="result__hide" class="result__hide">Скрыть</div>
               </div>
             `).join('')}
         </div>
@@ -784,7 +782,7 @@
 
         }
 
-        // BLACK LIST
+        // BLACKLIST
         // const blacklist = new Set(); // хранит id предметов
         const blacklist = new Set(
             JSON.parse(localStorage.getItem('blacklist') ?? '[]')
@@ -795,7 +793,7 @@
         const resultsEl = document.querySelector('#result');
 
         resultsEl.addEventListener('click', (e) => {
-            const counter = e.target.closest('.result-row');
+            const counter = e.target.closest('.result__hide');
             if (!counter) return;
 
             const row = counter.closest('.result-row');
