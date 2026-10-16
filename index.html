@@ -465,6 +465,8 @@
         <div class="category-filter" id="categoryFilter"></div>
 
 
+        <h2>MUST HAVE предметы</h2>
+        <div class="must-have-result" id="must-have-result"></div>
         <h2>Контр-предметы (по частоте)</h2>
         <div class="result" id="result">Выбери хотя бы одного героя</div>
     </div>
@@ -669,6 +671,87 @@
             superior_stamina: 'Superior Stamina',
         };
 
+
+        const MUST_HAVE_ITEM_TO_HEROES = {
+            // KILL BOTS
+            // monster_rounds: SUMMONER_HEROES,
+
+            // SAVE TEAMMATES
+            // divine_barrier: [...['abrams', 'apollo', 'bebop', 'billy', 'dynamo', 'graves', 'haze', 'holiday', 'ivy', 'lash', 'mina', 'mo_and_krill', 'paige', 'paradox', 'rem', 'silver', 'sinclair', 'the_doorman', 'venator', 'victor', 'vindicta', 'viscous', 'warden'], ...['pocket']],
+            // rescue_beam: ['abrams', 'apollo', 'bebop', 'billy', 'dynamo', 'graves', 'haze', 'holiday', 'ivy', 'lash', 'mina', 'mo_and_krill', 'paige', 'paradox', 'rem', 'silver', 'sinclair', 'the_doorman', 'venator', 'victor', 'vindicta', 'viscous', 'warden'],
+
+            // ANTI FLIGHT AND ULT
+            knockdown: ['seven', 'bebop', 'vindicta', 'lash'],
+            curse: ['dynamo', 'lash', 'bebop'],
+
+            // ANTI HEAL
+            // 2
+            // healbane: HEALING_HEROES,
+            // 3
+            // toxic_bullets: HEALING_HEROES,
+            // decay: HEALING_HEROES,
+            // 4
+            // spirit_burn: HEALING_HEROES,
+            // crippling: HEALING_HEROES,
+            // inhibitor: HEALING_HEROES,
+
+
+            // ANTI RESIST HEROES
+            // tank_buster: [''],
+
+            // ANTI STUN 
+            // debaff_reducer: ['abrams', 'apollo', 'drifter', 'graves', 'holiday', 'haze', 'infernus', 'ivy', 'lady_geist', 'mo_and_krill', 'paige', 'rem', 'sinclair', 'venator', 'victor', 'vindicta', 'warden'],
+            indomitable: ['mo_and_krill'],
+            // unstoppable: ['abrams', 'apollo', 'billy', 'celeste', 'drifter', 'dynamo', 'graves', 'grey_talon', 'haze', 'holiday', 'infernus', 'ivy', 'lady_geist', 'lash', 'mina', 'mirage', 'mo_and_krill', 'paige', 'paradox', 'rem', 'silver', 'sinclair', 'the_doorman', 'venator', 'victor', 'vindicta', 'vyper', 'warden', 'wraith'],
+            // counterspell: ['abrams', 'apollo', 'calico', 'bebop', 'billy', 'grey_talon', 'infernus', 'ivy', 'lady_geist', 'lash', 'mo_and_krill', 'paige', 'paradox', 'rem', 'seven', 'sinclair', 'the_doorman', 'venator', 'victor', 'warden'],
+            counterspell: ['apollo', 'rem'],
+            // ethereal_shift: ['apollo', 'kelvin', 'lash', 'abrams', 'bebop', 'billy', 'calico', 'celeste', 'graves', 'grey_talon', 'haze', 'holiday', 'infernus', 'ivy', 'lady_geist', 'mcginnis', 'mina', 'mirage', 'mo_and_krill', 'paige', 'paradox', 'pocket', 'rem', 'silver', 'sinclair', 'the_doorman', 'venator', 'victor', 'warden', 'wraith', 'yamato'],
+
+            // ANTI FIGHT HEROES
+            // rebuttal: PUNCHINGH_HEROES,
+
+
+            // ANTI SPIRIT 
+            // 2
+            // spirit_shielding: ['А это точно хорошая шмотка?'],
+            // 3
+            // silence_wave: ['abrams', 'wraith', 'haze', 'ivy', 'rem', 'victor', 'apollo', 'billy', 'celeste', 'calico', 'dynamo', 'drifter', 'holiday', 'mina', 'mirage', 'infernus', 'pocket', 'lady_geist', 'lash', 'sinclair', 'the_doorman', 'shiv', 'viscous', 'yamato'],
+            // spirit_resilience: SPIRIT_HEROES,
+            // 4
+            // spellbreaker: ['apollo', 'bebop', 'kelvin', 'calico', 'celeste', 'dynamo', 'holiday', 'lady_geist', 'lash', 'mina', 'mirage', 'paradox', 'shiv', 'sinclair', 'victor', 'viscous', 'yamato', 'wraith', 'paige'],
+            // silencer: SPIRIT_HEROES,
+            // scourge: ['А это точно контр шмотка?'],
+
+            // ANTI EFFECTS HEROES
+            // dispel_magic: ['bebop', 'vindicta', 'graves', 'haze', 'infernus', 'mirage', 'mo_and_krill', 'drifter', 'lady_geist', 'mina', 'paradox', 'seven', 'warden', 'the_doorman', 'shiv', 'vyper'],
+
+            // ANTI MOVEMENT HEROES 
+            // 2
+            // mystick_slow: [],
+            // slowing_hex: AGILE_HEROES,
+            // 4
+            // capacitor: AGILE_HEROES,
+            // vortex_web: AGILE_HEROES,
+
+            // ANTI GUN HEROES
+            // 1
+            // rusted_barrel: GUN_HEROES,
+            // 2
+            // return_fire: GUN_HEROES,
+            // suppressor: GUN_HEROES,
+            // 3
+            // bullet_resilience: GUN_HEROES,
+            metal_skin: ['haze', 'vyper'],
+            disarming_hex: ['silver'],
+            // escalating: ['haze', 'wraith', 'venator', 'victor', 'silver', 'holiday', 'grey_talon', 'vyper'],
+            // 4
+            phantom_strike: ['vindicta'],
+            // plated_armor: ['haze', 'infernus', 'mirage', 'mina', 'vyper'],
+            // juggernaut: GUN_HEROES,
+
+            // RUN AWAY
+            // superior_stamina: [],
+        };
 
         const ITEM_TO_HEROES = {
             // KILL BOTS
@@ -908,7 +991,35 @@
             renderHeroCount();
             const results = buildResults(selected, ITEM_TO_HEROES);
 
+            //    MUST HAVE
+            const mustHaveResults = buildResults(selected, MUST_HAVE_ITEM_TO_HEROES);
+            const mustHaveResultEl = document.getElementById('must-have-result');
+            const mustHaveGroups = groupbByTier(mustHaveResults);
+            mustHaveResultEl.innerHTML = Object.entries(mustHaveGroups)
+                .filter(([, items]) => items.length)     // пропускаем пустые тиры
+                .sort(([a], [b]) => a - b)               // от 1 до 4
+                .map(([tier, items]) => `
+              <section class="tier-group">
+                <h2 class="tier-group__title">Tier ${tier}</h2>
+                <div class="tier-group__items">
+                  ${items
+                        .sort((a, b) => b.count - a.count)   // внутри тира — по count
+                        .map(r => `
+                      <div class="result-row" data-item-id="${r.id}">
+                        <img class="result__icon" src="${r.icon}" alt="">
+                        <div class="result__item">${r.name}</div>
+                        <div class="result__heroes">${r.heroNames.join(', ')}</div>
+                        <div id="result__hide" class="result__hide">Скрыть</div>
+                      </div>
+                    `).join('')}
+                    </div>
+              </section>
+              `).join('');
+              
+            //   <div class="result__count count-${Math.min(r.count, 6)}">${r.count}</div>
+
             const visible = results.filter(r => !blacklist.has(r.id));
+
             const groups = groupbByTier(visible);
 
 
