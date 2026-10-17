@@ -475,13 +475,18 @@
         // === 1. Данные героев ===
 
         const HEROES = {
+            deadman_danny: 'Deadman Danny',
+            solomon: "Solomon",
+            baba: "Baba",
+            ratking: "Ratling",
+            violete: "Violete",
+            medic: "Medic",
             abrams: 'Abrams',
             apollo: 'Apollo',
             bebop: 'Bebop',
             billy: 'Billy',
             calico: 'Calico',
             celeste: 'Celeste',
-            deadman_danny: 'Deadman Danny',
             drifter: 'Drifter',
             dynamo: 'Dynamo',
             graves: 'Graves',
@@ -676,19 +681,19 @@
 
         const MUST_HAVE_ITEM_TO_HEROES = {
             // KILL BOTS
-            // monster_rounds: SUMMONER_HEROES,
+            monster_rounds: ['rem', 'mcginnis', 'graves'],
 
             // SAVE TEAMMATES
-            // divine_barrier: [...['abrams', 'apollo', 'bebop', 'billy', 'dynamo', 'graves', 'haze', 'holiday', 'ivy', 'lash', 'mina', 'mo_and_krill', 'paige', 'paradox', 'rem', 'silver', 'sinclair', 'the_doorman', 'venator', 'victor', 'vindicta', 'viscous', 'warden'], ...['pocket']],
-            // rescue_beam: ['abrams', 'apollo', 'bebop', 'billy', 'dynamo', 'graves', 'haze', 'holiday', 'ivy', 'lash', 'mina', 'mo_and_krill', 'paige', 'paradox', 'rem', 'silver', 'sinclair', 'the_doorman', 'venator', 'victor', 'vindicta', 'viscous', 'warden'],
+            divine_barrier: [...['abrams', 'apollo', 'bebop', 'billy', 'dynamo', 'graves', 'haze', 'holiday', 'ivy', 'lash', 'mina', 'mo_and_krill', 'paige', 'paradox', 'rem', 'silver', 'sinclair', 'the_doorman', 'venator', 'victor', 'vindicta', 'viscous', 'warden'], ...['pocket']],
+            rescue_beam: ['abrams', 'bebop', 'billy', 'dynamo', 'graves', 'haze', 'holiday', 'ivy', 'lash', 'mina', 'mo_and_krill', 'paige', 'paradox', 'rem', 'silver', 'sinclair', 'the_doorman', 'venator', 'victor', 'vindicta', 'viscous', 'warden'],
 
             // ANTI FLIGHT AND ULT
-            knockdown: ['seven', 'bebop', 'vindicta', 'lash'],
-            curse: ['dynamo', 'lash', 'bebop'],
+            knockdown: ['seven', 'bebop', 'vindicta', 'lash', 'mcginnis'],
+            curse: ['dynamo', 'lash', 'bebop', 'apollo', 'shiv', 'victor', 'billy', 'infernus'],
 
             // ANTI HEAL
             // 2
-            // healbane: HEALING_HEROES,
+            healbane: HEALING_HEROES,
             // 3
             // toxic_bullets: HEALING_HEROES,
             // decay: HEALING_HEROES,
@@ -704,7 +709,7 @@
             // ANTI STUN 
             // debaff_reducer: ['abrams', 'apollo', 'drifter', 'graves', 'holiday', 'haze', 'infernus', 'ivy', 'lady_geist', 'mo_and_krill', 'paige', 'rem', 'sinclair', 'venator', 'victor', 'vindicta', 'warden'],
             indomitable: ['mo_and_krill'],
-            unstoppable: ['dynamo', 'lash'],
+            // unstoppable: ['dynamo', 'lash'],
             // counterspell: ['abrams', 'apollo', 'calico', 'bebop', 'billy', 'grey_talon', 'infernus', 'ivy', 'lady_geist', 'lash', 'mo_and_krill', 'paige', 'paradox', 'rem', 'seven', 'sinclair', 'the_doorman', 'venator', 'victor', 'warden'],
             counterspell: ['apollo', 'rem'],
             // ethereal_shift: ['apollo', 'kelvin', 'lash', 'abrams', 'bebop', 'billy', 'calico', 'celeste', 'graves', 'grey_talon', 'haze', 'holiday', 'infernus', 'ivy', 'lady_geist', 'mcginnis', 'mina', 'mirage', 'mo_and_krill', 'paige', 'paradox', 'pocket', 'rem', 'silver', 'sinclair', 'the_doorman', 'venator', 'victor', 'warden', 'wraith', 'yamato'],
@@ -721,7 +726,7 @@
             // spirit_resilience: SPIRIT_HEROES,
             // 4
             // spellbreaker: ['apollo', 'bebop', 'kelvin', 'calico', 'celeste', 'dynamo', 'holiday', 'lady_geist', 'lash', 'mina', 'mirage', 'paradox', 'shiv', 'sinclair', 'victor', 'viscous', 'yamato', 'wraith', 'paige'],
-            // silencer: SPIRIT_HEROES,
+            silencer: ['apollo', 'shiv', 'victor', 'billy'],
             // scourge: ['А это точно контр шмотка?'],
 
             // ANTI EFFECTS HEROES
@@ -730,7 +735,7 @@
             // ANTI MOVEMENT HEROES 
             // 2
             // mystick_slow: [],
-            slowing_hex: ['wraith', 'dynamo', 'pocket', 'deadman_danny'],
+            // slowing_hex: [],
             // 4
             // capacitor: AGILE_HEROES,
             // vortex_web: AGILE_HEROES,
@@ -744,10 +749,10 @@
             // 3
             // bullet_resilience: GUN_HEROES,
             metal_skin: ['haze', 'vyper'],
-            disarming_hex: ['silver'],
+            // disarming_hex: ['silver'],
             // escalating: ['haze', 'wraith', 'venator', 'victor', 'silver', 'holiday', 'grey_talon', 'vyper'],
             // 4
-            phantom_strike: ['vindicta'],
+            // phantom_strike: ['vindicta'],
             // plated_armor: ['haze', 'infernus', 'mirage', 'mina', 'vyper'],
             // juggernaut: GUN_HEROES,
 
